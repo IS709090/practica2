@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:practica2/favorites/favorite_screen.dart';
+import 'package:practica2/foundSong/foundScreen.dart';
 
 import '../authentication/bloc/auth_logic_bloc.dart';
 
@@ -27,8 +28,8 @@ class _homeScreenState extends State<homeScreen> {
       ),
       RawMaterialButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => favoriteScreen()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => foundScreen()));
         },
         elevation: 3.33,
         fillColor: Colors.white,

@@ -67,7 +67,8 @@ class _favoriteScreenState extends State<favoriteScreen> {
                       child: RawMaterialButton(
                         onPressed: () {},
                         elevation: 3.33,
-                        child: Icon(Icons.favorite, color: Colors.white),
+                        child:
+                            Icon(Icons.favorite, color: Colors.red, size: 30),
                       ),
                     ),
                     Spacer(),

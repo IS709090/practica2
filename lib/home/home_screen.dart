@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:practica2/favorites/favorite_screen.dart';
+
+import '../authentication/bloc/auth_logic_bloc.dart';
 
 class homeScreen extends StatefulWidget {
   homeScreen({Key? key}) : super(key: key);
@@ -52,8 +55,28 @@ class _homeScreenState extends State<homeScreen> {
           ),
           RawMaterialButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => favoriteScreen()));
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Cerrar sesión'),
+                  content: const Text(
+                      'Al cerrar sesión de su cuenta será redirigido a la pantalla de Log In, ¿Quiere continuar?',
+                      textAlign: TextAlign.justify),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancelar'),
+                      child: const Text('Cancelar'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'Cerrar sesión');
+                        BlocProvider.of<AuthBloc>(context).add(SignOutEvent());
+                      },
+                      child: const Text('Cerrar sesión'),
+                    ),
+                  ],
+                ),
+              );
             },
             elevation: 3.33,
             fillColor: Colors.white,

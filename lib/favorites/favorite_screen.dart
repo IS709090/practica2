@@ -107,7 +107,7 @@ class _favoriteScreenState extends State<favoriteScreen> {
                       showDialog<String>(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Abrir Canción'),
+                          title: const Text('Eliminar Canción'),
                           content: const Text(
                               'Esta acción eliminará la canción de su lista de favoritos ¿Quieres continuar?',
                               textAlign: TextAlign.justify),
@@ -121,6 +121,7 @@ class _favoriteScreenState extends State<favoriteScreen> {
                               onPressed: () {
                                 BlocProvider.of<RecordingBloc>(context).add(
                                     RecordingRemoveFavorite(id: snapshot.id));
+                                Navigator.pop(context, 'Continuar');
                               },
                               child: const Text('Continuar'),
                             ),

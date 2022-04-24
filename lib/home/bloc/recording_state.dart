@@ -44,4 +44,6 @@ class RecordingFound extends RecordingState {
 
 class RecordingNotFound extends RecordingState {}
 
+class FavoriteAlreadyExists extends RecordingState {}
+
 class RecordingSearching extends RecordingState {}

@@ -37,6 +37,28 @@ class _foundScreenState extends State<foundScreen> {
       appBar: AppBar(
           title: Text("Here you go"),
           actions: [
+            BlocConsumer<RecordingBloc, RecordingState>(
+                builder: (context, state) {
+              return Container();
+            }, listener: (context, state) {
+              if (state is FavoriteAlreadyExists) {
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Favorito ya existe'),
+                    content: const Text(
+                        'La canción que eligio ya se encuentra en su lista de favoritos!',
+                        textAlign: TextAlign.justify),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }),
             RawMaterialButton(
               onPressed: () {
                 BlocProvider.of<RecordingBloc>(context).add(

@@ -88,6 +88,17 @@ class RecordingBloc extends Bloc<RecordingEvent, RecordingState> {
 
   FutureOr<void> _saveFavorite(
       RecordingSaveFavorites event, Emitter<RecordingState> emit) async {
+    var collection = FirebaseFirestore.instance.collection('favoriteSongs');
+    var querySnapshot = await collection.get();
+    for (var queryDocumentSnapshot in querySnapshot.docs) {
+      Map<String, dynamic> datos = queryDocumentSnapshot.data();
+      var name = datos['titulo'];
+      if (name == event.name) {
+        print("Ya se encuentra en tu lista!");
+        emit(FavoriteAlreadyExists());
+        return;
+      }
+    }
     var response =
         await FirebaseFirestore.instance.collection("favoriteSongs").add({
       "artista": event.artist,

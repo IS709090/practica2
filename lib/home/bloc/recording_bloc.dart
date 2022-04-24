@@ -3,12 +3,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:practica2/secrets.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:record/record.dart';
+
+import '../../favorites/songClass.dart';
 part 'recording_event.dart';
 part 'recording_state.dart';
 
@@ -17,6 +21,8 @@ class RecordingBloc extends Bloc<RecordingEvent, RecordingState> {
   RecordingBloc() : super(RecordingInitial()) {
     on<RecordingOnSearch>(_onSearch);
     on<RecordingSaveFavorites>(_saveFavorite);
+    on<RecordingGetAllFavorites>(_getFavorites);
+    on<RecordingRemoveFavorite>(_deleteFavorite);
   }
 
   FutureOr<void> _onSearch(
@@ -80,6 +86,7 @@ class RecordingBloc extends Bloc<RecordingEvent, RecordingState> {
             listnLink: listnLink,
             image: image));
       } else {
+        print("No se encontro!");
         emit(RecordingNotFound());
         return;
       }
@@ -118,5 +125,36 @@ class RecordingBloc extends Bloc<RecordingEvent, RecordingState> {
         .collection("user")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .update({'favorites': favoriteArray});
+  }
+
+  _getFavorites(RecordingGetAllFavorites event, Emitter<RecordingState> emit) {
+    final usersQuery = FirebaseFirestore.instance
+        .collection('favoriteSongs')
+        .withConverter<Song>(
+          fromFirestore: (snapshot, _) => Song.fromJson(snapshot.data()!),
+          toFirestore: (song, _) => song.toJson(),
+        );
+    print("Hola!");
+    print(usersQuery);
+    emit(FavoritesLoaded(query: usersQuery));
+  }
+
+  FutureOr<void> _deleteFavorite(
+      RecordingRemoveFavorite event, Emitter<RecordingState> emit) async {
+    final user = await FirebaseFirestore.instance
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    var favoriteArray = user.data()!["favorites"];
+    favoriteArray.remove(event.id);
+
+    await FirebaseFirestore.instance
+        .collection("user")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({'favorites': favoriteArray});
+    await FirebaseFirestore.instance
+        .collection("favoriteSongs")
+        .doc(event.id)
+        .delete();
   }
 }

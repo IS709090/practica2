@@ -46,4 +46,15 @@ class RecordingNotFound extends RecordingState {}
 
 class FavoriteAlreadyExists extends RecordingState {}
 
+class FavoriteDeleted extends RecordingState {}
+
+class FavoritesLoaded extends RecordingState {
+  final dynamic query;
+
+  FavoritesLoaded({required this.query});
+
+  @override
+  List<Object> get props => [this.query];
+}
+
 class RecordingSearching extends RecordingState {}

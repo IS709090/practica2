@@ -9,6 +9,17 @@ abstract class RecordingEvent extends Equatable {
 
 class RecordingOnSearch extends RecordingEvent {}
 
+class RecordingGetAllFavorites extends RecordingEvent {}
+
+class RecordingRemoveFavorite extends RecordingEvent {
+  final String id;
+
+  RecordingRemoveFavorite({required this.id});
+
+  @override
+  List<Object> get props => [this.id];
+}
+
 class RecordingSaveFavorites extends RecordingEvent {
   final String artist;
   final String name;

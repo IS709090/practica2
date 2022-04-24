@@ -43,6 +43,11 @@ class _homeScreenState extends State<homeScreen> {
                       date: state.date,
                       listnLink: state.listnLink,
                       name: state.name)));
+        } else if (state is FavoritesLoaded) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => favoriteScreen(query: state.query)));
         }
       }),
       RawMaterialButton(
@@ -64,8 +69,8 @@ class _homeScreenState extends State<homeScreen> {
         children: [
           RawMaterialButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => favoriteScreen()));
+              BlocProvider.of<RecordingBloc>(context)
+                  .add(RecordingGetAllFavorites());
             },
             elevation: 3.33,
             fillColor: Colors.white,

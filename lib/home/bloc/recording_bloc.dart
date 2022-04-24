@@ -3,16 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/firestore.dart';
-import 'package:practica2/secrets.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:record/record.dart';
 
 import '../../favorites/songClass.dart';
+import '../Audd_repository.dart';
 part 'recording_event.dart';
 part 'recording_state.dart';
 
@@ -50,16 +47,12 @@ class RecordingBloc extends Bloc<RecordingEvent, RecordingState> {
 
     final String bytesFile = base64Encode(File(path!).readAsBytesSync());
 
-    final response = await http.post(Uri.parse('https://api.audd.io/'), body: {
-      'api_token': auDDAPIKey,
-      'audio': bytesFile,
-      'return': "lyrics,apple_music,spotify"
-    });
+    final response = await AuddRepository().findSong(bytesFile);
 
     if (response.statusCode == 200) {
       var jsonContent = jsonDecode(response.body);
 
-      if (jsonContent["status"] == "success") {
+      if (jsonContent["status"] == "success" && jsonContent["result"] != null) {
         //     	"result": {
         // "artist": "Imagine Dragons",
         // "title": "Warriors",

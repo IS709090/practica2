@@ -53,6 +53,7 @@ class _favoriteScreenState extends State<favoriteScreen> {
                     ),
                     TextButton(
                       onPressed: () async {
+                        Navigator.pop(context, 'Continuar');
                         await launch(song.listnLink);
                       },
                       child: const Text('Continuar'),
@@ -119,9 +120,9 @@ class _favoriteScreenState extends State<favoriteScreen> {
                             ),
                             TextButton(
                               onPressed: () {
+                                Navigator.pop(context, 'Continuar');
                                 BlocProvider.of<RecordingBloc>(context).add(
                                     RecordingRemoveFavorite(id: snapshot.id));
-                                Navigator.pop(context, 'Continuar');
                               },
                               child: const Text('Continuar'),
                             ),

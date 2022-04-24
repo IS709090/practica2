@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:practica2/favorites/favorite_screen.dart';
 import 'package:practica2/foundSong/foundScreen.dart';
 import 'package:practica2/home/bloc/recording_bloc.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 
 import '../authentication/bloc/auth_logic_bloc.dart';
 
@@ -12,6 +13,8 @@ class homeScreen extends StatefulWidget {
   @override
   State<homeScreen> createState() => _homeScreenState();
 }
+
+var animate = false;
 
 class _homeScreenState extends State<homeScreen> {
   @override
@@ -31,6 +34,9 @@ class _homeScreenState extends State<homeScreen> {
         return Container();
       }, listener: (context, state) {
         if (state is RecordingFound) {
+          setState(() {
+            animate = false;
+          });
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -48,20 +54,43 @@ class _homeScreenState extends State<homeScreen> {
               context,
               MaterialPageRoute(
                   builder: (context) => favoriteScreen(query: state.query)));
+        } else if (state is RecordingSearching) {
+          setState(() {
+            print("Recordingggg");
+            animate = true;
+          });
+        } else if (state is RecordingNotFound) {
+          setState(() {
+            print("Recording not found");
+            animate = false;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    "No se encontró la canción! Asegurate de no tener ruido de fondo y que la canción a identificar tenga volumen alto"),
+              ),
+            );
+          });
         }
       }),
-      RawMaterialButton(
-        onPressed: () {
-          BlocProvider.of<RecordingBloc>(context).add(RecordingOnSearch());
-        },
-        elevation: 3.33,
-        fillColor: Colors.white,
-        child: Image.asset(
-          'assets/images/soundWave.png',
-          height: 200,
-          width: 200,
+      AvatarGlow(
+        endRadius: 150,
+        repeat: true,
+        animate: animate,
+        glowColor: Colors.white,
+        showTwoGlows: true,
+        child: RawMaterialButton(
+          onPressed: () {
+            BlocProvider.of<RecordingBloc>(context).add(RecordingOnSearch());
+          },
+          elevation: 3.33,
+          fillColor: Colors.white,
+          child: Image.asset(
+            'assets/images/soundWave.png',
+            height: 200,
+            width: 200,
+          ),
+          shape: CircleBorder(),
         ),
-        shape: CircleBorder(),
       ),
       SizedBox(height: 100),
       Row(

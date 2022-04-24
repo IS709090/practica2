@@ -73,6 +73,7 @@ import 'package:practica2/home/home_screen.dart';
 
 import 'authentication/bloc/auth_logic_bloc.dart';
 import 'authentication/login_screen.dart';
+import 'home/bloc/recording_bloc.dart';
 
 // void main() => runApp(FindTrackApp());
 
@@ -84,6 +85,9 @@ void main() async {
       providers: [
         BlocProvider(
           create: (context) => AuthBloc()..add(VerifyAuthEvent()),
+        ),
+        BlocProvider(
+          create: (context) => RecordingBloc(),
         ),
       ],
       child: FindTrackApp(),

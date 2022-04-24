@@ -43,12 +43,12 @@ class UserAuthRepository {
   Future<void> _createUserCollectionFirebase(String uid) async {
     //Revisar si existe el doc del usuario que se esta autenticando
     var userDoc =
-        await FirebaseFirestore.instance.collection("users").doc(uid).get();
+        await FirebaseFirestore.instance.collection("user").doc(uid).get();
     if (!userDoc.exists) {
       await FirebaseFirestore.instance
-          .collection("users")
+          .collection("user")
           .doc(uid)
-          .set({"songId": []});
+          .set({"favorites": []});
     } else {
       return;
     }

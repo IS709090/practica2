@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:practica2/favorites/favorite_screen.dart';
 import 'package:practica2/foundSong/foundScreen.dart';
+import 'package:practica2/home/bloc/recording_bloc.dart';
 
 import '../authentication/bloc/auth_logic_bloc.dart';
 
@@ -26,10 +27,27 @@ class _homeScreenState extends State<homeScreen> {
       Container(
         height: 100,
       ),
+      BlocConsumer<RecordingBloc, RecordingState>(builder: (context, state) {
+        return Container();
+      }, listener: (context, state) {
+        if (state is RecordingFound) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => foundScreen(
+                      album: state.album,
+                      spotifyLink: state.spotifyLink,
+                      appleMusicLink: state.appleMusicLink,
+                      artist: state.artist,
+                      image: state.image,
+                      date: state.date,
+                      listnLink: state.listnLink,
+                      name: state.name)));
+        }
+      }),
       RawMaterialButton(
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => foundScreen()));
+          BlocProvider.of<RecordingBloc>(context).add(RecordingOnSearch());
         },
         elevation: 3.33,
         fillColor: Colors.white,

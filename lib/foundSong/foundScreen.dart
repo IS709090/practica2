@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:practica2/home/bloc/recording_bloc.dart';
 
 import '../home/home_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class foundScreen extends StatefulWidget {
-  foundScreen({Key? key}) : super(key: key);
+  final String artist;
+  final String name;
+  final String date;
+  final String album;
+  final String spotifyLink;
+  final String appleMusicLink;
+  final String listnLink;
+  final String image;
+  foundScreen(
+      {Key? key,
+      required this.artist,
+      required this.name,
+      required this.date,
+      required this.album,
+      required this.spotifyLink,
+      required this.appleMusicLink,
+      required this.listnLink,
+      required this.image})
+      : super(key: key);
 
   @override
   State<foundScreen> createState() => _foundScreenState();
@@ -17,7 +38,14 @@ class _foundScreenState extends State<foundScreen> {
           title: Text("Here you go"),
           actions: [
             RawMaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                BlocProvider.of<RecordingBloc>(context).add(
+                    RecordingSaveFavorites(
+                        artist: widget.artist,
+                        name: widget.name,
+                        listnLink: widget.listnLink,
+                        image: widget.image));
+              },
               elevation: 3.33,
               child: Icon(Icons.favorite, color: Colors.white),
             )
@@ -29,10 +57,10 @@ class _foundScreenState extends State<foundScreen> {
               },
               icon: const Icon(Icons.arrow_back))),
       body: Center(
-          child: Column(
+          child: ListView(
         children: [
-          Image.asset(
-            'assets/images/soundWaveGif.gif',
+          Image.network(
+            widget.image,
             fit: BoxFit.contain,
           ),
           Container(
@@ -45,22 +73,24 @@ class _foundScreenState extends State<foundScreen> {
             ),
             child: Center(
               child: Text(
-                'Titulo de la canción' +
+                widget.name +
                     "\n" +
-                    "Albúm de la cancion" +
+                    widget.album +
                     "\n" +
-                    "Artista de la canción" +
+                    widget.artist +
                     "\n" +
-                    "Fecha de la cancion",
+                    widget.date,
                 style: TextStyle(fontSize: 20),
               ),
             ),
           ),
           Padding(
             padding: EdgeInsets.only(top: 15),
-            child: Text(
-              "Abrir con",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            child: Center(
+              child: Text(
+                "Abrir con",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
             ),
           ),
           Padding(
@@ -69,16 +99,25 @@ class _foundScreenState extends State<foundScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
+                    tooltip: "Escuchar en Spotify",
                     iconSize: 50,
-                    onPressed: () {},
+                    onPressed: () async {
+                      await launch(widget.spotifyLink);
+                    },
                     icon: Image.asset("assets/images/spotifyIcon.png")),
                 IconButton(
+                    tooltip: "Abrir en Listn",
                     iconSize: 50,
-                    onPressed: () {},
+                    onPressed: () async {
+                      await launch(widget.listnLink);
+                    },
                     icon: Icon(Icons.music_note)),
                 IconButton(
+                    tooltip: "Escuchar en Apple Music",
                     iconSize: 50,
-                    onPressed: () {},
+                    onPressed: () async {
+                      await launch(widget.appleMusicLink);
+                    },
                     icon: Image.asset("assets/images/appleIcon.png")),
               ],
             ),

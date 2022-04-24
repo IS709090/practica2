@@ -45,9 +45,9 @@ class RecordingBloc extends Bloc<RecordingEvent, RecordingState> {
     final String bytesFile = base64Encode(File(path!).readAsBytesSync());
 
     final response = await http.post(Uri.parse('https://api.audd.io/'), body: {
-      'return': 'apple_music,spotify',
-      'audioToken': auDDAPIKey,
-      'audio': bytesFile
+      'api_token': auDDAPIKey,
+      'audio': bytesFile,
+      'return': "lyrics,apple_music,spotify"
     });
 
     if (response.statusCode == 200) {

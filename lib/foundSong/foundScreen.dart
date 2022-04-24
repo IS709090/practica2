@@ -61,6 +61,12 @@ class _foundScreenState extends State<foundScreen> {
             }),
             RawMaterialButton(
               onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content:
+                        Text("Se agregó la canción a tu lista de Favoritos!"),
+                  ),
+                );
                 BlocProvider.of<RecordingBloc>(context).add(
                     RecordingSaveFavorites(
                         artist: widget.artist,
